@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday Talita 🎀</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Dancing+Script:wght@700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --rose: #f0a0b0;
+      --blush: #fbd5df;
+      --deep: #8b2252;
+      --gold: #d4a05a;
+      --cream: #fff5f8;
+      --lilac: #d4b8d8;
+      --dark: #2a0a18;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Cormorant Garamond', serif;
+      background: var(--cream);
+      color: var(--dark);
+      overflow-x: hidden;
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ctext y='20' font-size='20'%3E🌸%3C/text%3E%3C/svg%3E"), auto;
+    }
+
+    /* ─── OVERLAY (klik untuk mulai) ─── */
+    #overlay {
+      position: fixed; inset: 0;
+      background: linear-gradient(135deg, #2a0a18 0%, #5a1535 50%, #2a0a18 100%);
+      z-index: 9999;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 2rem;
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    #overlay.hide { opacity: 0; pointer-events: none; transform: scale(1.05); }
+    #overlay-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      color: var(--blush);
+      text-align: center;
+      animation: floatY 3s ease-in-out infinite;
+    }
+    #overlay p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      color: var(--lilac);
+      letter-spacing: 0.15em;
+      text-align: center;
+    }
+    #start-btn {
+      padding: 1rem 3rem;
+      background: transparent;
+      border: 1.5px solid var(--rose);
+      color: var(--rose);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 50px;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    #start-btn::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--rose);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+      z-index: -1;
+    }
+    #start-btn:hover::before { transform: scaleX(1); }
+    #start-btn:hover { color: var(--dark); }
+
+    /* ─── FLOATING PETALS ─── */
+    #petal-container {
+      position: fixed; inset: 0; pointer-events: none; z-index: 100;
+      overflow: hidden;
+    }
+    .petal {
+      position: absolute;
+      top: -60px;
+      font-size: 1.2rem;
+      opacity: 0.7;
+      animation: fall linear infinite;
+    }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      position: relative;
+      text-align: center;
+      padding: 2rem;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(240,160,176,0.25) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(212,184,216,0.2) 0%, transparent 60%),
+        var(--cream);
+    }
+    .hero-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--deep);
+      opacity: 0;
+      animation: fadeUp 1s ease 0.3s forwards;
+    }
+    .hero-name {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(4rem, 14vw, 10rem);
+      color: var(--deep);
+      line-height: 1;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.6s forwards;
+      text-shadow: 0 4px 30px rgba(139,34,82,0.2);
+    }
+    .hero-tagline {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      color: var(--gold);
+      opacity: 0;
+      animation: fadeUp 1s ease 0.9s forwards;
+      margin-top: 0.5rem;
+    }
+    .scroll-hint {
+      margin-top: 4rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--rose);
+      opacity: 0;
+      animation: fadeUp 1s ease 1.5s forwards, bounce 2s ease 2s infinite;
+    }
+    .hero-decor {
+      position: absolute;
+      font-size: 3rem;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    .hero-decor:nth-child(1) { top: 10%; left: 5%; animation: floatY 4s ease-in-out infinite; }
+    .hero-decor:nth-child(2) { top: 20%; right: 8%; animation: floatY 5s ease-in-out 1s infinite; }
+    .hero-decor:nth-child(3) { bottom: 15%; left: 8%; animation: floatY 3.5s ease-in-out 0.5s infinite; }
+    .hero-decor:nth-child(4) { bottom: 20%; right: 5%; animation: floatY 4.5s ease-in-out 1.5s infinite; }
+
+    /* ─── WISH CARDS ─── */
+    #wishes {
+      padding: 6rem 2rem;
+      background: linear-gradient(180deg, var(--cream) 0%, #fff0f5 100%);
+    }
+    .section-title {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: var(--deep);
+      margin-bottom: 3rem;
+      position: relative;
+    }
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 80px; height: 2px;
+      background: var(--gold);
+      margin: 1rem auto 0;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .wish-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 8px 40px rgba(139,34,82,0.08);
+      border: 1px solid rgba(240,160,176,0.3);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: default;
+    }
+    .wish-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--rose), var(--gold), var(--lilac));
+    }
+    .wish-card:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(139,34,82,0.14); }
+    .wish-emoji { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+    .wish-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--deep);
+      margin-bottom: 0.75rem;
+    }
+    .wish-card p {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #6a3a4a;
+      font-style: italic;
+    }
+
+    /* ─── PHOTO FRAME / MEMORY ─── */
+    #memory {
+      padding: 6rem 2rem;
+      text-align: center;
+      background: linear-gradient(135deg, #5a1535 0%, #8b2252 50%, #5a1535 100%);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    #memory::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    #memory .section-title { color: var(--blush); }
+    #memory .section-title::after { background: var(--gold); }
+    .polaroid-wrap {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 3rem;
+    }
+    .polaroid {
+      background: white;
+      padding: 1rem 1rem 3rem;
+      width: 200px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      transform: rotate(var(--rot));
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      cursor: pointer;
+    }
+    .polaroid:hover { transform: rotate(0deg) scale(1.05); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+    .polaroid-img {
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--blush);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+      border-radius: 2px;
+    }
+    .polaroid-label {
+      text-align: center;
+      margin-top: 0.75rem;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1rem;
+      color: var(--dark);
+    }
+
+    /* ─── COUNTDOWN / AGE COUNTER ─── */
+    #counter-section {
+      padding: 5rem 2rem;
+      text-align: center;
+      background: var(--cream);
+    }
+    .counter-box {
+      display: inline-flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 3rem;
+    }
+    .counter-item {
+      background: white;
+      border: 1.5px solid var(--rose);
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      min-width: 100px;
+      box-shadow: 0 4px 20px rgba(240,160,176,0.2);
+    }
+    .counter-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      color: var(--deep);
+      display: block;
+    }
+    .counter-label {
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    /* ─── CONFETTI BUTTON ─── */
+    #confetti-section {
+      padding: 5rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, #fff0f5 0%, var(--cream) 100%);
+    }
+    #confetti-section p {
+      font-size: 1.1rem;
+      color: #6a3a4a;
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    .big-btn {
+      padding: 1.2rem 4rem;
+      background: linear-gradient(135deg, var(--deep), #c04470);
+      border: none;
+      color: white;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 8px 30px rgba(139,34,82,0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .big-btn:hover { transform: scale(1.05); box-shadow: 0 12px 40px rgba(139,34,82,0.4); }
+    .big-btn:active { transform: scale(0.98); }
+
+    /* ─── LETTER ─── */
+    #letter {
+      padding: 6rem 2rem;
+      background: #fff0f5;
+      display: flex; justify-content: center;
+    }
+    .letter-card {
+      max-width: 680px;
+      width: 100%;
+      background: white;
+      border-radius: 24px;
+      padding: 3rem;
+      box-shadow: 0 10px 60px rgba(139,34,82,0.1);
+      border: 1px solid rgba(240,160,176,0.4);
+      position: relative;
+    }
+    .letter-card::before {
+      content: '❝';
+      position: absolute;
+      top: 1.5rem; left: 2rem;
+      font-size: 5rem;
+      color: var(--blush);
+      line-height: 1;
+      font-family: Georgia, serif;
+    }
+    .letter-card h2 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2rem;
+      color: var(--deep);
+      margin-bottom: 1.5rem;
+      padding-top: 1.5rem;
+    }
+    .letter-card p {
+      font-size: 1.05rem;
+      line-height: 2;
+      color: #5a3040;
+      margin-bottom: 1rem;
+    }
+    .letter-signature {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.5rem;
+      color: var(--deep);
+      text-align: right;
+      margin-top: 2rem;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      text-align: center;
+      padding: 3rem;
+      background: var(--dark);
+      color: var(--lilac);
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+    }
+    footer span { color: var(--rose); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes floatY {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-15px); }
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(8px); }
+    }
+    @keyframes fall {
+      0%   { transform: translateY(-60px) rotate(0deg); opacity: 0.8; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+    @keyframes pop {
+      0%   { transform: scale(0) rotate(-10deg); opacity: 0; }
+      60%  { transform: scale(1.1) rotate(3deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    .pop { animation: pop 0.5s cubic-bezier(.36,1.2,.6,1) forwards; }
+
+    /* scroll fade-in */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- Overlay -->
+<div id="overlay">
+  <div id="overlay-title">Sebuah Kejutan Untukmu 🎀</div>
+  <p>Ada seseorang yang ingin mengucapkan sesuatu…</p>
+  <button id="start-btn" onclick="startSite()">Buka Hadiahmu ✨</button>
+</div>
+
+<!-- Floating petals -->
+<div id="petal-container"></div>
+
+<!-- HERO -->
+<section id="hero">
+  <span class="hero-decor">🌸</span>
+  <span class="hero-decor">💐</span>
+  <span class="hero-decor">🌷</span>
+  <span class="hero-decor">✨</span>
+
+  <p class="hero-sub">Selamat Hari Ulang Tahun</p>
+  <h1 class="hero-name">Talita</h1>
+  <p class="hero-tagline">Semoga hari ini seindah dirimu 🌺</p>
+  <p class="scroll-hint">↓ scroll ke bawah ↓</p>
+</section>
+
+<!-- WISHES -->
+<section id="wishes">
+  <h2 class="section-title reveal">Doa & Harapan Untukmu</h2>
+  <div class="cards-grid">
+    <div class="wish-card reveal">
+      <span class="wish-emoji">🌟</span>
+      <h3>Cahaya yang Menerangi</h3>
+      <p>"Semoga setiap langkahmu selalu diterangi oleh cahaya kebaikan, dan hatimu penuh dengan kebahagiaan yang tak terhingga."</p>
+    </div>
+    <div class="wish-card reveal">
+      <span class="wish-emoji">💖</span>
+      <h3>Cinta yang Tulus</h3>
+      <p>"Dikelilingi orang-orang yang menyayangimu dengan tulus, semoga kamu selalu merasa dicintai setiap hari."</p>
+    </div>
+    <div class="wish-card reveal">
+      <span class="wish-emoji">🌸</span>
+      <h3>Mimpi yang Mekar</h3>
+      <p>"Seperti bunga yang mekar di musim semi, semoga semua impian dan cita-citamu terwujud satu per satu."</p>
+    </div>
+    <div class="wish-card reveal">
+      <span class="wish-emoji">🦋</span>
+      <h3>Perjalanan yang Indah</h3>
+      <p>"Semoga perjalanan hidupmu penuh warna, dan setiap babak baru membawa keajaiban yang lebih indah."</p>
+    </div>
+    <div class="wish-card reveal">
+      <span class="wish-emoji">✨</span>
+      <h3>Keberhasilan di Setiap Langkah</h3>
+      <p>"Semakin bertambah usia, semakin bertambah pula kebijaksanaan, prestasi, dan senyum di wajahmu."</p>
+    </div>
+    <div class="wish-card reveal">
+      <span class="wish-emoji">🎂</span>
+      <h3>Hari yang Penuh Sukacita</h3>
+      <p>"Semoga hari ulang tahunmu menjadi awal dari tahun yang paling luar biasa dalam hidupmu!"</p>
+    </div>
+  </div>
+</section>
+
+<!-- MEMORY / POLAROID -->
+<section id="memory">
+  <h2 class="section-title reveal">Momen Spesial 📸</h2>
+  <p class="reveal" style="color:var(--lilac); font-style:italic; max-width:500px; margin:0 auto;">
+    Kenangan indah yang selalu terpatri di hati…
+  </p>
+  <div class="polaroid-wrap">
+    <div class="polaroid reveal" style="--rot:-4deg">
+      <div class="polaroid-img">🌺</div>
+      <div class="polaroid-label">Secantik bunga</div>
+    </div>
+    <div class="polaroid reveal" style="--rot:2deg">
+      <div class="polaroid-img">✨</div>
+      <div class="polaroid-label">Bersinar selalu</div>
+    </div>
+    <div class="polaroid reveal" style="--rot:-2deg">
+      <div class="polaroid-img">💫</div>
+      <div class="polaroid-label">Penuh keajaiban</div>
+    </div>
+    <div class="polaroid reveal" style="--rot:4deg">
+      <div class="polaroid-img">🦋</div>
+      <div class="polaroid-label">Bebas terbang tinggi</div>
+    </div>
+  </div>
+</section>
+
+<!-- COUNTER -->
+<section id="counter-section">
+  <h2 class="section-title reveal">Hari Istimewamu 🎀</h2>
+  <p class="reveal" style="font-style:italic; color:#6a3a4a;">Kamu sudah melewati banyak momen luar biasa…</p>
+  <div class="counter-box reveal" id="counter-box">
+    <div class="counter-item">
+      <span class="counter-number" id="cnt-year">–</span>
+      <span class="counter-label">Tahun</span>
+    </div>
+    <div class="counter-item">
+      <span class="counter-number" id="cnt-month">–</span>
+      <span class="counter-label">Bulan</span>
+    </div>
+    <div class="counter-item">
+      <span class="counter-number" id="cnt-day">–</span>
+      <span class="counter-label">Hari</span>
+    </div>
+    <div class="counter-item">
+      <span class="counter-number" id="cnt-hrs">–</span>
+      <span class="counter-label">Jam</span>
+    </div>
+  </div>
+  <p class="reveal" style="margin-top:2rem; color:var(--gold); font-family:'Playfair Display',serif; font-size:1.1rem;">
+    … sejak kamu lahir ke dunia dan menerangi hidup semua orang 🌟
+  </p>
+</section>
+
+<!-- CONFETTI -->
+<section id="confetti-section">
+  <h2 class="section-title reveal">Rayakan Bersama! 🎉</h2>
+  <p class="reveal">Klik tombol di bawah untuk merayakan hari spesialmu!</p>
+  <button class="big-btn reveal" onclick="launchConfetti()">🎂 Tiup Lilinnya! 🎂</button>
+  <div id="confetti-area" style="height:80px; margin-top:1rem; font-size:2.5rem; text-align:center;"></div>
+</section>
+
+<!-- LETTER -->
+<section id="letter">
+  <div class="letter-card reveal">
+    <h2>Untuk Talita yang Terkasih,</h2>
+    <p>
+      Di hari yang penuh kebahagiaan ini, aku ingin kamu tahu betapa berartinya dirimu
+      bagi semua orang di sekitarmu. Kehadiranmu membawa kehangatan, tawa, dan semangat
+      yang tak ternilai.
+    </p>
+    <p>
+      Setiap tahun yang kamu lalui adalah bukti betapa kuatnya kamu, betapa indahnya
+      perjalananmu, dan betapa banyak hal luar biasa yang sudah kamu capai.
+    </p>
+    <p>
+      Semoga di usia yang baru ini, kamu semakin bersinar, semakin bahagia, dan semua
+      yang kamu inginkan segera hadir di hidupmu. Kamu layak mendapatkan semua yang terbaik! 💖
+    </p>
+    <div class="letter-signature">— Dengan Penuh Kasih Sayang ✨</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  Made with <span>♡</span> khusus untuk <span>Talita</span> · Happy Birthday! 🎀
+</footer>
+
+<script>
+  /* ─── START ─── */
+  function startSite() {
+    document.getElementById('overlay').classList.add('hide');
+    createPetals();
+    startCounter();
+    setTimeout(setupScrollReveal, 900);
+  }
+
+  /* ─── PETALS ─── */
+  const EMOJIS = ['🌸','🌷','🌺','💮','✿','🌼','💐'];
+  function createPetals() {
+    const container = document.getElementById('petal-container');
+    for (let i = 0; i < 24; i++) {
+      const p = document.createElement('span');
+      p.className = 'petal';
+      p.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.fontSize = (0.8 + Math.random() * 1.2) + 'rem';
+      p.style.animationDuration = (6 + Math.random() * 10) + 's';
+      p.style.animationDelay = (Math.random() * 12) + 's';
+      container.appendChild(p);
+    }
+  }
+
+  /* ─── COUNTER ─── */
+  function startCounter() {
+    const birthday = new Date(2000, 3, 24); // → ganti tanggal lahir Talita di sini!
+    function update() {
+      const now = new Date();
+      let years = now.getFullYear() - birthday.getFullYear();
+      let months = now.getMonth() - birthday.getMonth();
+      let days = now.getDate() - birthday.getDate();
+      let hrs = now.getHours();
+      if (days < 0) { months--; const prev = new Date(now.getFullYear(), now.getMonth(), 0); days += prev.getDate(); }
+      if (months < 0) { years--; months += 12; }
+      document.getElementById('cnt-year').textContent = years;
+      document.getElementById('cnt-month').textContent = months;
+      document.getElementById('cnt-day').textContent = days;
+      document.getElementById('cnt-hrs').textContent = hrs;
+    }
+    update();
+    setInterval(update, 60000);
+  }
+
+  /* ─── CONFETTI ─── */
+  const PARTY = ['🎉','🎊','🥳','🎈','🎀','🌟','💖','✨','🍰','🎂','💫','🌺'];
+  function launchConfetti() {
+    const area = document.getElementById('confetti-area');
+    area.innerHTML = '';
+    for (let i = 0; i < 28; i++) {
+      const span = document.createElement('span');
+      span.textContent = PARTY[Math.floor(Math.random() * PARTY.length)];
+      span.style.display = 'inline-block';
+      span.style.margin = '0 4px';
+      span.style.fontSize = (1.5 + Math.random() * 1.5) + 'rem';
+      span.style.opacity = '0';
+      span.style.transform = 'scale(0)';
+      span.style.transition = `all 0.4s cubic-bezier(.36,1.2,.6,1) ${i * 60}ms`;
+      area.appendChild(span);
+      setTimeout(() => { span.style.opacity = '1'; span.style.transform = 'scale(1)'; }, 50);
+    }
+    // bounce button feedback
+    const btn = document.querySelector('.big-btn');
+    btn.textContent = '🎉 Selamat Ulang Tahun Talita! 🎉';
+    setTimeout(() => { btn.textContent = '🎂 Tiup Lilinnya! 🎂'; }, 3000);
+  }
+
+  /* ─── SCROLL REVEAL ─── */
+  function setupScrollReveal() {
+    const els = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), 0);
+        }
+      });
+    }, { threshold: 0.15 });
+    els.forEach(el => obs.observe(el));
+  }
+
+  /* ─── CARD STAGGER ─── */
+  document.querySelectorAll('.cards-grid').forEach(grid => {
+    [...grid.children].forEach((card, i) => {
+      card.style.transitionDelay = (i * 0.1) + 's';
+    });
+  });
+</script>
+</body>
+</html>
